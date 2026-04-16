@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0b0f" />
+  <meta name="description" content="RPEベースのトレーニングボリューム管理・プレート計算アプリ。Progressive Overload Assistantで継続的な筋力向上をサポート。" />
+  <title>Progressive Overload Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===== HEADER ===== -->
+  <header class="app-header">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1>Plate Calculator</h1>
+        <p class="subtitle">プレート計算</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================= -->
+  <!-- MAIN: PLATE CALCULATOR       -->
+  <!-- ============================= -->
+  <section class="tab-panel active" id="panelPlate" role="tabpanel">
+
+    <div class="card">
+      <!-- Target Weight -->
+      <div class="form-group">
+        <label class="form-label" for="plateTarget">目標重量 (kg)</label>
+        <div class="num-input-group">
+          <button class="num-btn" onclick="adjustValue('plateTarget', -2.5)" aria-label="重量 -2.5kg">－</button>
+          <input class="form-input num-input" type="number" id="plateTarget"
+            min="0" max="600" step="0.5" value="80"
+            oninput="calcPlates()" />
+          <button class="num-btn" onclick="adjustValue('plateTarget', 2.5)" aria-label="重量 +2.5kg">＋</button>
+        </div>
+      </div>
+
+      <!-- Shaft Weight -->
+      <div class="form-group">
+        <label class="form-label">シャフト重量</label>
+        <div class="toggle-group" id="shaftToggle" role="group" aria-label="シャフト重量選択">
+          <button class="toggle-btn" id="shaft25" onclick="selectShaft(25, this)">25 kg</button>
+          <button class="toggle-btn active" id="shaft20" onclick="selectShaft(20, this)">20 kg</button>
+          <button class="toggle-btn" id="shaft15" onclick="selectShaft(15, this)">15 kg</button>
+          <button class="toggle-btn" id="shaft10" onclick="selectShaft(10, this)">10 kg</button>
+          <button class="toggle-btn" id="shaftCustom" onclick="selectShaft('custom', this)">カスタム</button>
+        </div>
+        <div id="shaftCustomInput" style="margin-top:var(--sp-2);display:none;">
+          <input class="form-input" type="number" id="shaftCustomVal"
+            placeholder="シャフト重量を入力" min="0" max="50" step="0.5"
+            oninput="calcPlates()" />
+        </div>
+      </div>
+
+      <!-- Plate Pattern -->
+      <div class="form-group">
+        <label class="form-label">プレートセット</label>
+        <div class="toggle-group" role="group" aria-label="プレートセット選択">
+          <button class="toggle-btn active" id="patA" onclick="selectPattern('A', this)">パターン A<br><small style="font-weight:400;font-size:0.65rem;">〜20kg</small></button>
+          <button class="toggle-btn" id="patB" onclick="selectPattern('B', this)">パターン B<br><small style="font-weight:400;font-size:0.65rem;">〜25kg</small></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div class="card" id="plateResultCard">
+
+      <!-- Barbell Visual -->
+      <p class="section-title">バーベル ビジュアル</p>
+      <div class="barbell-visual" id="barbellVisual" aria-label="バーベルプレート配置">
+        <!-- rendered by JS -->
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Plate List -->
+      <div class="flex justify-between items-center mb-2">
+        <p class="section-title" style="margin-bottom:0;">片側のプレート構成</p>
+        <span class="text-sm text-muted" id="plateSideWeight"></span>
+      </div>
+      <div class="plate-list" id="plateList"></div>
+
+      <!-- Total Check -->
+      <div class="card mt-3" style="background:var(--bg-secondary);padding:var(--sp-3) var(--sp-4);">
+        <div class="flex justify-between">
+          <span class="text-sm text-muted">合計重量（再計算）</span>
+          <span class="font-bold" id="plateTotalCheck">—</span>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+</div><!-- /#app -->
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toastEl" role="alert" aria-live="assertive"></div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<!-- App Logic -->
+<script src="app.js"></script>
+
+</body>
+</html>
